@@ -191,9 +191,9 @@ If you use CamDistance in your research, please cite:
 @article{khodami2025camdistance,
   title={CamDistance: A Web-Based Tool for Automatic Camera Distance Detection Using Facial Landmark Detection},
   author={Khodami, Mohammad Ahsan},
-  journal={},
+  journal={Zenodo},
   year={2025},
-  publisher={}
+  DOI={https://doi.org/10.5281/zenodo.16420228}
 }
 ```
 
