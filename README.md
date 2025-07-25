@@ -203,7 +203,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- **Documentation**: [Coming Soon]
+- **Documentation**: N/A
 - **Issues**: Please report bugs and feature requests on GitHub
 - **Contact**: Mohammad Ahsan Khodami (ORCID: 0000-0003-0130-7752)
 
