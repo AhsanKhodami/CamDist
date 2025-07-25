@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CamDistance - Advanced Example</title>
+  <link rel="stylesheet" href="../dist/jspsych.css">
+  <script src="../dist/face_mesh.min.js"></script>
+  <script src="../dist/camera_utils.js"></script>
+  <script src="../dist/jspsych.js"></script>
+  <script src="../dist/plugin-html-keyboard-response.js"></script>
+  <script src="../dist/jspsych-camera-distance-detection.js"></script>
+</head>
+<body></body>
+
+<script>
+  // Store detection results
+  let detectionResults = {};
+
+  const jsPsych = initJsPsych({
+    override_safe_mode: true,
+    on_finish: function() {
+      // Show complete results
+      document.body.innerHTML = `
+        <div style="max-width: 800px; margin: 50px auto; font-family: Arial, sans-serif;">
+          <h1 style="color: #2c3e50; text-align: center;">Experiment Complete</h1>
+          
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h3>Detection Results:</h3>
+            <p><strong>Measured Distance:</strong> ${detectionResults.distance} cm</p>
+            <p><strong>Confidence:</strong> ${detectionResults.confidence}</p>
+            <p><strong>Measurements Used:</strong> ${detectionResults.count}</p>
+          </div>
+          
+          <div style="background: #d4edda; padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h3 style="color: #155724;">Data Summary:</h3>
+            <p>This detection data can now be used to ensure accurate stimulus presentation in your psychological experiment.</p>
+            <p>The measured viewing distance ensures that visual angles and stimulus sizes are precisely controlled.</p>
+          </div>
+        </div>
+      `;
+    }
+  });
+
+  // Experimental timeline
+  const timeline = [
+    // Welcome screen
+    {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+          <h1>Welcome to the Experiment</h1>
+          <p>This experiment requires accurate distance measurement for proper stimulus presentation.</p>
+          <p>We will first detect your viewing distance using your computer's camera.</p>
+          <p><strong>Press any key to continue</strong></p>
+        </div>
+      `,
+      choices: "ALL_KEYS"
+    },
+
+    // Distance detection
+    {
+      type: jsPsychCameraDistanceDetection,
+      width_cm: 6.3,
+      instruction_text: `
+        <h2>Distance Detection</h2>
+        <p>Please position yourself comfortably in front of your computer.</p>
+        <p><strong>For best results:</strong></p>
+        <ul style="text-align: left; display: inline-block;">
+          <li>Ensure good lighting on your face</li>
+          <li>Look directly at the camera</li>
+          <li>Sit at a comfortable distance (50-80 cm recommended)</li>
+          <li>Keep your head still during measurement</li>
+        </ul>
+        <p>Click "Start Detection" when ready.</p>
+      `,
+      on_finish: function(data) {
+        // Store detection results
+        detectionResults = {
+          distance: data.viewing_distance_cm ? data.viewing_distance_cm.toFixed(1) : 'Unknown',
+          confidence: data.confidence || 'N/A',
+          count: data.measurements_count || 'N/A'
+        };
+        
+        console.log('Detection completed:', detectionResults);
+      }
+    },
+
+    // Confirmation screen
+    {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: function() {
+        return `
+          <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+            <h2>Detection Complete!</h2>
+            <div style="background: #d4edda; padding: 20px; border-radius: 10px; margin: 20px 0;">
+              <h3 style="color: #155724;">Measured Distance: ${detectionResults.distance} cm</h3>
+            </div>
+            <p>Your viewing distance has been successfully measured.</p>
+            <p>This ensures that all visual stimuli will be presented at the correct size for your setup.</p>
+            <p><strong>Press any key to continue to the main experiment</strong></p>
+          </div>
+        `;
+      },
+      choices: "ALL_KEYS"
+    },
+
+    // Placeholder for actual experiment trials
+    {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+          <h2>Main Experiment</h2>
+          <p>This is where your actual experimental trials would go.</p>
+          <p>The detected distance (${detectionResults.distance} cm) can be used to:</p>
+          <ul style="text-align: left; display: inline-block;">
+            <li>Calculate correct visual angles for stimuli</li>
+            <li>Adjust stimulus sizes based on viewing distance</li>
+            <li>Ensure consistent experimental conditions</li>
+          </ul>
+          <p><strong>Press any key to finish</strong></p>
+        </div>
+      `,
+      choices: "ALL_KEYS"
+    }
+  ];
+
+  // Run the experiment
+  jsPsych.run(timeline);
+</script>
+</html>
