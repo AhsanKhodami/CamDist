@@ -34,6 +34,10 @@ Traditional methods rely on manual measurement with rulers, which is time-consum
 4. **Stabilization**: Averages measurements over time and filters outliers
 5. **Result Display**: Shows measured distance in centimeters
 
+## Try it Now!
+
+An online version of the application can be accessed at [khodami.info/CamDist-trial](https://khodami.info/CamDist-trial/).
+
 ## Installation
 
 ### Direct Usage (Recommended)
